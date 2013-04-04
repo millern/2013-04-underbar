@@ -5,6 +5,34 @@ var _ = {};
   // Return an array of the last n elements of an array. If n is undefined,
   // return just the last element.
   _.last = function(array, n) {
+
+    var newArray = array;
+    if (arguments.length > 2 || arguments.length < 1 ) {
+      return false;
+    }
+
+    if (!Array.isArray(array)) {
+      newArray = [];
+      for (var i = 0; i<array.length;i++){
+        newArray.push(array[i]);
+      }
+    }
+
+
+
+      if (n == undefined) {
+        return newArray.pop();
+      } else if (n >= newArray.length) {
+        return newArray
+      } else {
+        var returnArray = [];
+        for (var i = 0; i< n; i++) {
+          returnArray.unshift(newArray.pop())
+        }
+        return returnArray;
+      }
+    
+    
   };
 
   // Like last, but for the first elements
