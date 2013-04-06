@@ -24,7 +24,7 @@ describe("last", function() {
 
 });
 
-/*
+
 
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
@@ -43,6 +43,7 @@ describe("first", function() {
   });
 
 });
+
 
 describe("each", function() {
   it("should provide value and iteration count", function() {
@@ -183,9 +184,9 @@ describe("invoke with function reference", function() {
     var list = [[5, 1, 7], [3, 2, 1]];
     var result = _.invoke(list, Array.prototype.sort);
     expect(result[1]).to.eql([1, 2, 3]);
-  });
+  }); 
 });
-
+/*
 describe("reduce", function() {
   it("should be able to sum up an array", function() {
     var callback = function(sum, num) {return sum + num; };

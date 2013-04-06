@@ -5,46 +5,68 @@ var _ = {};
   // Return an array of the last n elements of an array. If n is undefined,
   // return just the last element.
   _.last = function(array, n) {
-
-    var newArray = array;
     if (arguments.length > 2 || arguments.length < 1 ) {
       return false;
     }
+    var newArray = [];
 
     if (!Array.isArray(array)) {
-      newArray = [];
       for (var i = 0; i<array.length;i++){
         newArray.push(array[i]);
       }
+    } else {
+      newArray = array;
     }
-
-
-
-      if (n == undefined) {
-        return newArray.pop();
-      } else if (n >= newArray.length) {
-        return newArray
-      } else {
-        var returnArray = [];
-        for (var i = 0; i< n; i++) {
-          returnArray.unshift(newArray.pop())
-        }
-        return returnArray;
+    if (n == undefined) {
+      return newArray.pop();
+    } else if (n >= newArray.length) {
+      return newArray
+    } else {
+      var returnArray = [];
+      for (var i = 0; i< n; i++) {
+        returnArray.unshift(newArray.pop())
       }
-    
-    
+      return returnArray;
+    }
   };
 
   // Like last, but for the first elements
   _.first = function(array, n) {
+
+    if (arguments.length > 2 || arguments.length < 1 ) {
+      return false;
+    }
+    var newArray = []
+
+
+    if (!Array.isArray(array)) {
+      for (var i = 0; i<array.length;i++){
+        newArray.push(array[i]);
+      }
+    } else {
+      newArray = array;
+    }
     // TIP: you can often re-use similar functions in clever ways, like so:
-    return _.last(array.reverse(), n);
+
+
+      var finArray = _.last(newArray.reverse(), n);
+      if (Array.isArray(finArray)) {
+        return finArray.reverse();
+      } else {
+        return finArray;
+      }
+      
+    
   };
 
 
   // Call iterator(value, key, collection) for each element of collection
-  _.each = function(obj, iterator) {
-  };
+    _.each = function(obj, iterator) {
+
+      for (var i = 0; i<obj.length; i++) {
+        iterator(obj[i],i,obj);
+      }
+    };
 
   /*
    * TIP: Here's an example of a function that needs to iterate, which we've
@@ -68,16 +90,46 @@ var _ = {};
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, iterator) {
+      var rtnArray = [];
+
+      _.each(collection, function(item,index){
+          if (iterator(item)) {
+            rtnArray.push(item);
+          }
+
+      });
+      return rtnArray;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, iterator) {
     // TIP: see if you can re-use _.select() here, without simply
     // copying code in and modifying it
+
+    return _.filter(collection,function(item) {
+        return !iterator(item);
+    });
+
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+
+    var rtnArray = [];
+
+    for (var i = 0; i<array.length;i++){
+        var contains = -1;
+        for (var j = 0; j <= rtnArray.length; j++){
+          if (rtnArray[j] == array[i]){
+            contains = 1;
+          }
+        }
+        if (contains == -1) {
+          rtnArray.push(array[i]);
+        }
+    }
+
+    return rtnArray;
   };
 
 
@@ -89,6 +141,15 @@ var _ = {};
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+
+    var rtnArray = [];
+
+    _.each(array,function(item) {
+      rtnArray.push(iterator(item));
+
+    });
+    return rtnArray;
+
   };
 
   /*
@@ -108,6 +169,19 @@ var _ = {};
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName) {
+    var returnArray = list;
+    if (typeof(methodName) == "string"){
+      _.each(list,function(item) {
+      item[methodName].apply(item);
+      });
+    return returnArray;
+    } else {
+      _.each(list,function(item) {
+      methodName.apply(item);
+      });
+    return returnArray;
+    }
+  
   };
 
   // Reduces an array or object to a single value by repetitively calling
