@@ -63,9 +63,16 @@ var _ = {};
   // Call iterator(value, key, collection) for each element of collection
     _.each = function(obj, iterator) {
 
-      for (var i = 0; i<obj.length; i++) {
-        iterator(obj[i],i,obj);
+      if (Array.isArray(obj)){
+        for (var i = 0; i<obj.length; i++) {
+          iterator(obj[i],i,obj);
+        }
+      } else {
+        for (var item in obj) {
+          iterator(obj[item],item,obj);
+        }
       }
+      
     };
 
   /*
@@ -198,6 +205,8 @@ var _ = {};
   //   }, 0); // should be 6
   //
   _.reduce = function(obj, iterator, initialValue) {
+
+
   };
 
   // Determine if the array or object contains a given value (using `===`).
