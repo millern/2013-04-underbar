@@ -88,7 +88,8 @@ var _ = {};
 
     _.each(array, function(item, index) {
       if (item === target && result === -1) {
-        result = index;
+        //parseInt from string because for...in loop uses strings as iterators
+        result = parseInt(index);
       }
     });
 
@@ -206,6 +207,12 @@ var _ = {};
   //
   _.reduce = function(obj, iterator, initialValue) {
 
+    var result = initialValue || 0;
+
+    _.each(obj, function(item, index, collection) {
+      result = iterator(result, item);
+    });
+    return result;
 
   };
 
@@ -225,12 +232,27 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(obj, iterator) {
     // TIP: use reduce on this one!
+    var result = true;
+
+    result = _.reduce(obj,function(isTrue,item){
+      if (!isTrue) {
+        return false;
+      } else {
+        return Boolean(iterator(item));
+      }
+    },true);
+
+    return result;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.any = function(obj, iterator) {
     // TIP: re-use every() here
+    iterator = iterator || function(variable){return Boolean(variable);};
+    return !_.every(obj,function(item){
+      return !iterator(item);
+    });
   };
 
 
@@ -251,11 +273,32 @@ var _ = {};
   //   }); // obj1 now contains key1, key2, key3 and bla
   //
   _.extend = function(obj) {
+
+    var rtnObj = obj;
+
+    for (var i = 1; i <= arguments.length; i++){
+      for (var attrName in arguments[i]){
+        rtnObj[attrName] = arguments[i][attrName];
+      }
+    }
+    return rtnObj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var rtnObj = obj;
+
+    for (var i = 1; i <= arguments.length; i++){
+      for (var attrName in arguments[i]){
+        if ((rtnObj[attrName]==undefined)) {
+          rtnObj[attrName] = arguments[i][attrName];
+        }
+        
+      }
+    }
+    return rtnObj;
+
   };
 
 
@@ -293,6 +336,20 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+
+    var result; 
+    var cache = {};
+
+
+    return function(argument) {
+      if(cache.hasOwnProperty(argument)){
+        result = cache[argument];
+      } else {
+        result = func.apply(this,arguments);
+        cache[argument] = result;
+      }
+      return result;
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -302,6 +359,11 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+
+    var argArray = _.last(arguments,arguments.length - 2);
+
+    setTimeout(function(){func.apply(null,argArray)},wait);
+
   };
 
 
@@ -311,6 +373,20 @@ var _ = {};
 
   // Shuffle an array.
   _.shuffle = function(obj) {
+
+      var rtn = [];
+      for (var i = 0; i<obj.length; i++) {
+        rtn[i] = obj[i];
+      }
+
+        for (var i = 0; i<rtn.length; i++) {
+          var newInd = Math.floor(Math.random()*rtn.length);
+          var tmp = rtn[newInd];
+            rtn[newInd] = rtn[i];
+            rtn[i] = tmp;
+        }
+      
+      return rtn;
   };
 
   /* (End of pre-course curriculum) */

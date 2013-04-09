@@ -72,7 +72,7 @@ describe("indexOf", function() {
 
   it("should work on an arguments object", function() {
     var args = returnArguments(1,2,3);
-    expect(_.indexOf(args, 2)).to.be(1);
+    expect(_.indexOf(args, 3)).to.be(2);
   });
 
   it("should not have 35 in the list", function() {
@@ -186,7 +186,7 @@ describe("invoke with function reference", function() {
     expect(result[1]).to.eql([1, 2, 3]);
   }); 
 });
-/*
+
 describe("reduce", function() {
   it("should be able to sum up an array", function() {
     var callback = function(sum, num) {return sum + num; };
@@ -336,6 +336,7 @@ describe("extend", function() {
   });
 });
 
+
 describe("defaults", function() {
   var result, options;
 
@@ -433,6 +434,8 @@ describe("shuffle", function() {
   });
 });
 
+
+/*
 describe("sortBy", function() {
   it("should sort by age", function() {
     var people = [{name : 'curly', age : 50}, {name : 'moe', age : 30}];
@@ -533,3 +536,21 @@ describe("difference", function() {
 });
 
 */
+_.range = function(start, stop, step) {
+    if (arguments.length <= 1) {
+      stop = start || 0;
+      start = 0;
+    }
+    step = arguments[2] || 1;
+
+    var len = Math.max(Math.ceil((stop - start) / step), 0);
+    var idx = 0;
+    var range = new Array(len);
+
+    while(idx < len) {
+      range[idx++] = start;
+      start += step;
+    }
+
+    return range;
+  };
